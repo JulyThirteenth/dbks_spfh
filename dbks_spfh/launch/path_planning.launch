@@ -1,0 +1,8 @@
+<launch>
+
+    <!-- <include file="$(find tpcap_benchmark)/launch/tpcap_benchmark.launch" /> -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dbks_spfh)/rviz/path_planning.rviz" />
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find dbks_spfh)/sim_maps/config.yaml" />
+    <node name="path_planning_node" pkg="dbks_spfh" type="path_planning_node" />
+    
+</launch>

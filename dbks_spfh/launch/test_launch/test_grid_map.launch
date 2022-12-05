@@ -1,0 +1,7 @@
+<launch>
+
+    <node name="rviz" pkg="rviz" type="rviz" />
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find dbks_spfh)/sim_maps/config.yaml" />
+    <node name="test_grid_map" pkg="dbks_spfh" type="test_grid_map" />
+    
+</launch>
