@@ -51,21 +51,12 @@ public:
     Point getNearestObstaclePoint(const Point &curr,
                                   const double thresholdDistance) const;
     void updateBinMap(const nav_msgs::OccupancyGridConstPtr &map);
-    void updateAstar2dLookup(int x, int y, std::vector<std::vector<int>> &astar2dLookup);
-    void updateAstar2dLookupToStart(int startX, int startY)
-    {
-        updateAstar2dLookup(startX, startY, astar2dLookupToStart);
-    }
-    void updateAstar2dLookupToEnd(int endX, int endY)
-    {
-        updateAstar2dLookup(endX, endY, astar2dLookupToEnd);
-    }
+    void updateAstar2dLookup(int x, int y);
 
 public:
     // binMap[i][j]==1,表示点(i,j)右上角的栅格为障碍物
     std::vector<std::vector<bool>> binMap;
-    std::vector<std::vector<int>> astar2dLookupToStart;
-    std::vector<std::vector<int>> astar2dLookupToEnd;
+    std::vector<std::vector<int>> astar2dLookup;
     int width;
     int height;
     double resolution;

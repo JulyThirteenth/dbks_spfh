@@ -165,7 +165,7 @@ Path searchPath(Pose &start, Pose &end,
         SearchType searchWay = (SearchType)FLAGS_SearchWay; //搜索方式
         if (searchWay == BothWay || searchWay == ForwardWay)
         {
-            configurationSpace.updateAstar2dLookupToEnd((int)end.x, (int)end.y);
+            configurationSpace.updateAstar2dLookup((int)end.x, (int)end.y);
             startNode->updateGCost(true);
             startNode->updateHCost(true, endNode, configurationSpace);
             startNode->updateICost(endNode, configurationSpace);
@@ -174,7 +174,6 @@ Path searchPath(Pose &start, Pose &end,
         }
         if (searchWay == BothWay || searchWay == ReverseWay)
         {
-            configurationSpace.updateAstar2dLookupToStart((int)start.x, (int)start.y);
             endNode->updateGCost(false);
             endNode->updateHCost(false, startNode, configurationSpace);
             endNode->updateICost(startNode, configurationSpace);

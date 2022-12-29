@@ -73,7 +73,7 @@ void Node::updateHCost(bool isForwardExpansion,
     double dubinsCost = 0.;
     double reedsSheppCost = 0.;
     double astar2dLookupCost = 0.;
-    double astar2dLookupOffset = 0.;
+    // double astar2dLookupOffset = 0.;
     double start[3] = {x, y, t};
     double end[3] = {goal->x, goal->y, goal->t};
     if (FLAGS_CarReverse)
@@ -91,12 +91,7 @@ void Node::updateHCost(bool isForwardExpansion,
     }
     if (isForwardExpansion)
     {
-        astar2dLookupCost = static_cast<double>(searchSpace.astar2dLookupToEnd[int(x)][int(y)]) *
-                            searchSpace.resolution;
-    }
-    else
-    {
-        astar2dLookupCost = static_cast<double>(searchSpace.astar2dLookupToStart[int(x)][int(y)]) *
+        astar2dLookupCost = static_cast<double>(searchSpace.astar2dLookup[int(x)][int(y)]) *
                             searchSpace.resolution;
     }
     // myinfo << "astar2dLookupCost: " << astar2dLookupCost;

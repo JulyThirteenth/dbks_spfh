@@ -146,28 +146,17 @@ void GridMap::updateBinMap(const nav_msgs::OccupancyGridConstPtr &map)
             binMap[x][y] = (map->data[y * width + x] != 0);
         }
     }
-    if (FLAGS_SearchWay == BothWay || FLAGS_SearchWay == ForwardWay)
+    astar2dLookup.resize(width);
+    for (int i = 0; i < width; i++)
     {
-        astar2dLookupToEnd.resize(width);
-        for (int i = 0; i < width; i++)
-        {
-            astar2dLookupToEnd[i].resize(height);
-        }
-    }
-    if (FLAGS_SearchWay == BothWay || FLAGS_SearchWay == ReverseWay)
-    {
-        astar2dLookupToStart.resize(width);
-        for (int i = 0; i < width; i++)
-        {
-            astar2dLookupToStart[i].resize(height);
-        }
+        astar2dLookup[i].resize(height);
     }
     this->isValidMap = true;
 }
 //###################################################
 //每个点到目标点（x,y）的距离（考虑障碍物不考虑车辆约束）
 //###################################################
-void GridMap::updateAstar2dLookup(int x, int y, std::vector<std::vector<int>> &astar2dLookup)
+void GridMap::updateAstar2dLookup(int x, int y)
 {
     int *cor = new int[2 * (width + height) * 2 * 2];
     short *status = new short[width * height];

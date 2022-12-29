@@ -18,7 +18,7 @@ typedef std::vector<std::vector<std::vector<NodeP>>> NodePC;
 typedef std::priority_queue<NodeP, NodePV, NodeCompareByCost> NodePQ;
 
 Path searchPath(Pose &start, Pose &end,
-              GridMap &configurationSpace,
-              Visualization &visualization);
+                GridMap &configurationSpace,
+                Visualization &visualization);
 
 #endif
