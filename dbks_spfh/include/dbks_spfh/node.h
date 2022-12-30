@@ -58,6 +58,10 @@ public:
         return (sqrt(pow(this->x - rhs.x, 2) + pow(this->y - rhs.y, 2)) < distance &&
                 ((std::abs(this->t - rhs.t) <= deltaRad) || (std::abs(this->t - rhs.t) >= deltaNegRad)));
     }
+    inline bool isReverse() const
+    {
+        return (dir > 3); // 判断当前节点方向是前进还是后退
+    }
     inline Node &operator=(const Node &rhs)
     {
         if (this != &rhs)

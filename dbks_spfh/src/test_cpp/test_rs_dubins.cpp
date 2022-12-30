@@ -100,6 +100,9 @@ void PathPlanning::run()
             visual_path_node.pose.orientation = tf::createQuaternionMsgFromYaw(it[3]);
             visual_path.poses.push_back(visual_path_node);
         }
+        int last_idx = rs_path.size() - 1;
+        LOG(INFO) << "rs path start: " << rs_path[0][0] << "," << rs_path[0][1] << "," << rs_path[0][2];
+        LOG(INFO) << "rs path end: " << rs_path[last_idx][0] << "," << rs_path[last_idx][1] << "," << rs_path[last_idx][2];
         pub_rs_path.publish(visual_path);
         visual_path.poses.clear();
         DubinsPath temp;
@@ -115,6 +118,9 @@ void PathPlanning::run()
             visual_path_node.pose.orientation = tf::createQuaternionMsgFromYaw(it[3]);
             visual_path.poses.push_back(visual_path_node);
         }
+        last_idx = dubins_path.size() - 1;
+        LOG(INFO) << "dubins path start: " << dubins_path[0][0] << "," << dubins_path[0][1] << "," << dubins_path[0][2];
+        LOG(INFO) << "dubins path end: " << dubins_path[last_idx][0] << "," << dubins_path[last_idx][1] << "," << dubins_path[last_idx][2];
         pub_dubins_path.publish(visual_path);
         is_valid_start = is_valid_end = false;
     }

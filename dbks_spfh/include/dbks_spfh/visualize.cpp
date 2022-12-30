@@ -29,13 +29,13 @@ Visualization::Visualization()
     forward_nodes.header.frame_id = "/map";
     reverse_nodes.header.frame_id = "/map";
     initial_path.header.frame_id = "/map";
-    // initial_path_poses.header.frame_id = "/map";
+    smooth_path.header.frame_id = "/map";
     pub_start_car = nh.advertise<visualization_msgs::Marker>("/start_car", 1, true);
     pub_end_car = nh.advertise<visualization_msgs::Marker>("/end_car", 1, true);
     pub_forward_nodes = nh.advertise<geometry_msgs::PoseArray>("/farward_nodes", 1, true);
     pub_reverse_nodes = nh.advertise<geometry_msgs::PoseArray>("/reverse_nodes", 1, true);
     pub_initial_path = nh.advertise<nav_msgs::Path>("/initial_path", 1, true);
-    // pub_initial_path_poses = nh.advertise<geometry_msgs::PoseArray>("/initial_path_poses", 1, true);
+    pub_smooth_path = nh.advertise<nav_msgs::Path>("/smooth_path", 1, true);
 }
 void Visualization::clear()
 {
@@ -49,8 +49,8 @@ void Visualization::clear()
     pub_reverse_nodes.publish(reverse_nodes);
     initial_path.poses.clear();
     pub_initial_path.publish(initial_path);
-    // initial_path_poses.poses.clear();
-    // pub_initial_path_poses.publish(initial_path_poses);
+    smooth_path.poses.clear();
+    pub_smooth_path.publish(smooth_path);
 }
 void Visualization::visaulize_start_and_end(const Pose &start, const Pose &end, const double swelling)
 {
@@ -84,7 +84,6 @@ void Visualization::visualize_expansion_nodes(const std::shared_ptr<Node> &node)
     geometry_msgs::Pose pose;
     pose.position.x = node->x;
     pose.position.y = node->y;
-
     // FORWARD
     if (node->dir < 3)
     {
@@ -110,7 +109,6 @@ void Visualization::visualize_initial_path(Path &path)
 {
     geometry_msgs::PoseStamped pose_stamped;
     initial_path.header.stamp = ros::Time::now();
-    // initial_path_poses.header.stamp = ros::Time::now();
     path.total_path();
     for(auto path_node: path.full_path)
     {
@@ -118,8 +116,20 @@ void Visualization::visualize_initial_path(Path &path)
         pose_stamped.pose.position.y = path_node.y;
         pose_stamped.pose.orientation = tf::createQuaternionMsgFromYaw(path_node.t);
         initial_path.poses.push_back(pose_stamped); 
-        // initial_path_poses.poses.push_back(pose_stamped.pose);
     }
     pub_initial_path.publish(initial_path);
-    // pub_initial_path_poses.publish(initial_path_poses);
+}
+void Visualization::visualize_smooth_path(Path &path)
+{
+    geometry_msgs::PoseStamped pose_stamped;
+    smooth_path.header.stamp = ros::Time::now();
+    path.total_path();
+    for(auto path_node: path.full_path)
+    {
+        pose_stamped.pose.position.x = path_node.x;
+        pose_stamped.pose.position.y = path_node.y;
+        pose_stamped.pose.orientation = tf::createQuaternionMsgFromYaw(path_node.t);
+        smooth_path.poses.push_back(pose_stamped); 
+    }
+    pub_smooth_path.publish(smooth_path);
 }

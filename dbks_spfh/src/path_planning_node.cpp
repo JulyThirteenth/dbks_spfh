@@ -8,6 +8,7 @@
 #include "../include/dbks_spfh/dubins.h"
 #include "../include/dbks_spfh/grid_map.h"
 #include "../include/dbks_spfh/search_path.h"
+#include "../include/dbks_spfh/smooth_path.h"
 #include "../include/dbks_spfh/visualize.h"
 #include <vector>
 #include <iostream>
@@ -79,7 +80,8 @@ void PathPlanning::run()
     {
         Pose start = {m_start[0], m_start[1], m_start[2]};
         Pose end = {m_end[0], m_end[1], m_end[2]};
-        searchPath(start, end, grid_map, visualizaiton);
+        Path path = searchPath(start, end, grid_map, visualizaiton);
+        smoothPath(path, grid_map, visualizaiton);
         is_valid_start = is_valid_end = false;
     }
 }

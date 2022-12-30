@@ -10,17 +10,17 @@
 #include <algorithm>
 #include <glog/logging.h>
 
-//###################################################
-//functions of logging
-//###################################################
+// ###################################################
+// functions of logging
+// ###################################################
 #define myinfo LOG(INFO)
 #define mywarn LOG(WARNING)
 #define myerror LOG(ERROR)
 #define myfatal LOG(FATAL)
 
-//###################################################
-//functions of angle handling 
-//###################################################
+// ###################################################
+// functions of angle handling
+// ###################################################
 inline double normalizeHeadingDeg(double t)
 {
     if ((int)t <= 0 || (int)t >= 360)
@@ -53,18 +53,43 @@ inline double toRad(double t)
     return normalizeHeadingRad(t / 180.0 * M_PI);
 }
 
-//###################################################
-// A simple template point in struct
-//###################################################
+// ###################################################
+//  A simple template point in struct
+// ###################################################
 template <typename T>
 struct TemplatePoint
 {
     T x, y;
     TemplatePoint(T x_, T y_) : x(x_), y(y_) {}
     TemplatePoint() : x(0), y(0) {}
-    bool operator==(const struct TemplatePoint<T> &rhs)
+    bool operator==(const struct TemplatePoint<T> &rhs) const
     {
         return (this->x == rhs.x) && (this->y == rhs.y);
+    }
+    // a method to multiply a point by a scalar
+    inline TemplatePoint<T> operator*(const double k) const { return TemplatePoint<T>(x * k, y * k); }
+    // a method to divide a point by a scalar
+    inline TemplatePoint<T> operator/(const double k) const { return TemplatePoint<T>(x / k, y / k); }
+    // a method to add a point to a point
+    inline TemplatePoint<T> operator+(const TemplatePoint<T> &b) const { return TemplatePoint<T>(x + b.x, y + b.y); }
+    // a method to subtract a point from a point
+    inline TemplatePoint<T> operator-(const TemplatePoint<T> &b) const { return TemplatePoint<T>(x - b.x, y - b.y); }
+    // a method to negate a point
+    inline TemplatePoint<T> operator-() const { return TemplatePoint<T>(-x, -y); }
+    /// a method to calculate the length of the point vector
+    double length() const { return std::sqrt(std::pow(x, 2) + std::pow(y, 2)); }
+    /// a method to calculate the length of the point vector
+    double sqlength() const { return x * x + y * y; }
+    /// a method to calculate the dot product of two point vectors
+    double dot(TemplatePoint<T> b) const { return x * b.x + y * b.y; }
+    ///a method that returns the orthogonal complement of two point vectors
+    inline TemplatePoint<T> ort(TemplatePoint<T> b) const
+    {
+      TemplatePoint<T> a(this->x, this->y);
+      TemplatePoint<T> c;
+      // multiply b by the dot product of this and b then divide it by b's length
+      c = a - b * a.dot(b) / b.sqlength();
+      return c;
     }
 };
 typedef struct TemplatePoint<double> Point;
@@ -72,20 +97,25 @@ typedef struct TemplatePoint<int> intPoint;
 template <typename T>
 static std::ostream &operator<<(std::ostream &os, struct TemplatePoint<T> &p)
 {
-    os<< "(" << p.x << ", " << p.y << ")";
+    os << "(" << p.x << ", " << p.y << ")";
     return os;
 }
-//###################################################
-// A simple template vector in struct
-//###################################################
+template <typename T>
+inline TemplatePoint<T> operator*(double k, const TemplatePoint<T> &b)
+{
+    return (b * k);
+}
+// ###################################################
+//  A simple template point in struct
+// ###################################################
 template <typename T1, typename T2>
-struct TemplateVector
+struct Templatepoint
 {
     T1 x, y;
     T2 t;
-    TemplateVector(T1 x_, T1 y_, T2 t_) : x(x_), y(y_), t(t_) {}
-    TemplateVector() : x(0), y(0), t(0) {}
-    struct TemplateVector<T1, T2> &operator=(const struct TemplateVector<T1, T2> &vec)
+    Templatepoint(T1 x_, T1 y_, T2 t_) : x(x_), y(y_), t(t_) {}
+    Templatepoint() : x(0), y(0), t(0) {}
+    struct Templatepoint<T1, T2> &operator=(const struct Templatepoint<T1, T2> &vec)
     {
         if (this != &vec)
         {
@@ -96,18 +126,18 @@ struct TemplateVector
         return *this;
     }
 };
-typedef struct TemplateVector<double, double> Pose;
-typedef struct TemplateVector<int, int> Index;
+typedef struct Templatepoint<double, double> Pose;
+typedef struct Templatepoint<int, int> Index;
 template <typename T1, typename T2>
-static std::ostream &operator<<(std::ostream &os, struct TemplateVector<T1, T2> &v)
+static std::ostream &operator<<(std::ostream &os, struct Templatepoint<T1, T2> &v)
 {
-    os<< v.x << ", " << v.y << ", " << v.t;
+    os << v.x << ", " << v.y << ", " << v.t;
     return os;
 }
 
-//###################################################
-// fill polygon on grids
-//###################################################
+// ###################################################
+//  fill polygon on grids
+// ###################################################
 typedef struct edge
 {
     int ymax;
@@ -119,9 +149,9 @@ typedef Edge **EdgeTable;
 typedef Edge *ActiveEdgeTable;
 void fillPolygon(const std::vector<Point> &vertices, double resolution, std::vector<intPoint> &polygArea);
 
-//###################################################
-// line traversal on grids
-//###################################################
+// ###################################################
+//  line traversal on grids
+// ###################################################
 void gridTraversal(const Point &start, const Point &goal, const double resolution, std::vector<intPoint> &visitedGrid);
 
 #endif

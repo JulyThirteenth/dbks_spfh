@@ -1,12 +1,5 @@
 #include "params.h"
 
-// DEFINE_double(GridMapResolution, 0.2,
-//               "The resolution of GridMap. Units: m/pixel");
-// DEFINE_int32(GridMapWidth, 100,
-//              "The width of GridMap. Units: pixel");
-// DEFINE_int32(GridMapHeight, 164,
-//              "The heigth of GridMap. Units: pixel");
-
 DEFINE_int32(Headings, 72, "The number of discretization.");
 DEFINE_double(DeltaHeadingDeg, 360.0 / static_cast<double>(FLAGS_Headings),
               "The dalta heading degree of discretization. Units: degree");
@@ -48,4 +41,4 @@ DEFINE_bool(Visualization, true, "Flag of alorithm visualization.");
 DEFINE_int32(MaxSmoothIterations, 5000, "Max iterations of smoothness.");
 DEFINE_double(RatioOfSmoothness, 1.0, "");
 DEFINE_double(RatioOfObstacle, 10.0, "");
-DEFINE_double(SmoothStepSize, 0.5, "");
+DEFINE_double(SmoothStepSize, 0.01, "");

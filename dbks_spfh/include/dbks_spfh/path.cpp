@@ -25,11 +25,33 @@ void Path::trace_path(const NodeP &pred, const NodeP &next, bool shooting /* = t
             double sample_length = FLAGS_ExpansionVelocity * 1.0;
             std::vector<std::vector<double>> path;
             path = r.xingshensample(s, e, sample_length);
-            for (int i = 0; i < path.size(); i++)
+            // rs_path第一个节点已经包含在forward_path里，故从第二个节点开始。
+            // rs_path最后一个节点为目标点前一节点。
+            for (int i = 1; i < path.size(); i++)
             {
                 node.x = path[i][0];
                 node.y = path[i][1];
-                node.t = path[i][2];
+                node.t = normalizeHeadingRad(path[i][2]);
+                // 车头朝向和到下一个目标点的朝向的夹角
+                double deltaTheta;
+                if (i == path.size() - 1)
+                {
+                    deltaTheta = fabs(node.t - normalizeHeadingRad(atan2((node.y - e[1]), (node.x - e[0]))));
+                }
+                else
+                {
+                    double next_x = path[i + 1][0];
+                    double next_y = path[i + 1][1];
+                    deltaTheta = fabs(node.t - normalizeHeadingRad(atan2((node.y - next_y), (node.x - next_x))));
+                }
+                if (deltaTheta > M_PI_2 && deltaTheta < 3 * M_PI_2)
+                {
+                    node.dir = Back; // reeds shepp shooting`s nodes are back nodes
+                }
+                else
+                {
+                    node.dir = Forward; // reeds shepp shooting`s nodes are forward nodes
+                }
                 shooting_path.push_back(node);
             }
         }
@@ -47,6 +69,7 @@ void Path::trace_path(const NodeP &pred, const NodeP &next, bool shooting /* = t
                 node.x = now[0];
                 node.y = now[1];
                 node.t = now[2];
+                node.dir = Forward; // All dubins shooting`s nodes are forward nodes
                 shooting_path.push_back(node);
             }
         }

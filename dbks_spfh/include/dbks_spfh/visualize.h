@@ -24,6 +24,7 @@ public:
     void visaulize_start_and_end(const Pose &start, const Pose &end, const double swelling);
     void visualize_expansion_nodes(const std::shared_ptr<Node> &node);
     void visualize_initial_path(Path &path);
+    void visualize_smooth_path(Path &path);
     
 private:
     ros::NodeHandle nh;
@@ -32,15 +33,13 @@ private:
     ros::Publisher pub_forward_nodes;
     ros::Publisher pub_reverse_nodes;
     ros::Publisher pub_initial_path;
-    // ros::Publisher pub_initial_path_poses;
     ros::Publisher pub_smooth_path;
-    // ros::Publisher pub_smooth_path_poses;
     visualization_msgs::Marker start_car;
     visualization_msgs::Marker end_car;
     geometry_msgs::PoseArray forward_nodes;
     geometry_msgs::PoseArray reverse_nodes;
     nav_msgs::Path initial_path;
-    // geometry_msgs::PoseArray initial_path_poses;
+    nav_msgs::Path smooth_path;
 };
 
 #endif
