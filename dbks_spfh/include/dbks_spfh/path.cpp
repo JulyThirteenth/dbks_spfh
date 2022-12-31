@@ -46,11 +46,11 @@ void Path::trace_path(const NodeP &pred, const NodeP &next, bool shooting /* = t
                 }
                 if (deltaTheta > M_PI_2 && deltaTheta < 3 * M_PI_2)
                 {
-                    node.dir = Back; // reeds shepp shooting`s nodes are back nodes
+                    node.dir = Forward; // reeds shepp shooting`s nodes are back nodes
                 }
                 else
                 {
-                    node.dir = Forward; // reeds shepp shooting`s nodes are forward nodes
+                    node.dir = Back; // reeds shepp shooting`s nodes are forward nodes
                 }
                 shooting_path.push_back(node);
             }
@@ -83,6 +83,7 @@ void Path::trace_path(const NodeP &pred, const NodeP &next, bool shooting /* = t
     myinfo << "Forward Path Size: " << forward_path.size() << ", "
            << "Shooting Path Size: " << shooting_path.size() << ", "
            << "Reverse Path Size: " << reverse_path.size();
+    total_path();
 }
 void Path::total_path()
 {
@@ -101,4 +102,94 @@ void Path::total_path()
         initial_path.push_back(path_node);
     }
     myinfo << "Total Path Size: " << initial_path.size();
+}
+void Path::print_forward_path()
+{
+    myinfo << "-------------forward_path-------------";
+    if (forward_path.empty())
+    {
+        myinfo << "forward_path is empty!";
+        return;
+    }
+    for (int i = 0; i < forward_path.size(); i++)
+    {
+        myinfo << "第" << i << "点: " << "("
+               << forward_path[i].x << ","
+               << forward_path[i].y << ","
+               << forward_path[i].t << ")"
+               << " Reverse Node? " << forward_path[i].isReverse();
+    }
+    myinfo << "-------------forward_path-------------";
+}
+void Path::print_shooting_path()
+{
+    myinfo << "-------------shooting_path-------------";
+    if (shooting_path.empty())
+    {
+        myinfo << "shooting_path is empty!";
+        return;
+    }
+    for (int i = 0; i < shooting_path.size(); i++)
+    {
+        myinfo << "第" << i << "点: " << "("
+               << shooting_path[i].x << ","
+               << shooting_path[i].y << ","
+               << shooting_path[i].t << ")"
+               << " Reverse Node? " << shooting_path[i].isReverse();
+    }
+    myinfo << "-------------shooting_path-------------";
+}
+void Path::print_reverse_path()
+{
+    myinfo << "-------------reverse_path-------------";
+    if (reverse_path.empty())
+    {
+        myinfo << "reverse_path is empty!";
+        return;
+    }
+    for (int i = 0; i < reverse_path.size(); i++)
+    {
+        myinfo << "第" << i << "点: " << "("
+               << reverse_path[i].x << ","
+               << reverse_path[i].y << ","
+               << reverse_path[i].t << ")"
+               << " Reverse Node? " << reverse_path[i].isReverse();
+    }
+    myinfo << "-------------reverse_path-------------";
+}
+void Path::print_initial_path()
+{
+    myinfo << "-------------initial_path-------------";
+    if (initial_path.empty())
+    {
+        myinfo << "initial_path is empty!";
+        return;
+    }
+    for (int i = 0; i < initial_path.size(); i++)
+    {
+        myinfo << "第" << i << "点: " << "("
+               << initial_path[i].x << ","
+               << initial_path[i].y << ","
+               << initial_path[i].t << ")"
+               << " Reverse Node? " << initial_path[i].isReverse();
+    }
+    myinfo << "-------------initial_path-------------";
+}
+void Path::print_smooth_path()
+{
+    myinfo << "-------------smooth_path-------------";
+    if (smooth_path.empty())
+    {
+        myinfo << "smooth_path is empty!";
+        return;
+    }
+    for (int i = 0; i < smooth_path.size(); i++)
+    {
+        myinfo << "第" << i << "点: " << "("
+               << smooth_path[i].x << ","
+               << smooth_path[i].y << ","
+               << smooth_path[i].t << ")"
+               << " Reverse Node? " << smooth_path[i].isReverse();
+    }
+    myinfo << "-------------smooth_path-------------";
 }

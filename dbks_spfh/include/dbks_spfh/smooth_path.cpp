@@ -108,11 +108,11 @@ void smoothPath(Path &path, GridMap &gridMap, Visualization &visualization)
                 {
                     continue;
                 }
-                Point predP2(smoothedPath[i - 2].x, smoothedPath[i - 2].x);
-                Point predP1(smoothedPath[i - 1].x, smoothedPath[i - 1].x);
-                Point currP(smoothedPath[i].x, smoothedPath[i].x);
-                Point nextP1(smoothedPath[i + 1].x, smoothedPath[i + 1].x);
-                Point nextP2(smoothedPath[i + 2].x, smoothedPath[i + 2].x);
+                Point predP2(smoothedPath[i - 2].x, smoothedPath[i - 2].y);
+                Point predP1(smoothedPath[i - 1].x, smoothedPath[i - 1].y);
+                Point currP(smoothedPath[i].x, smoothedPath[i].y);
+                Point nextP1(smoothedPath[i + 1].x, smoothedPath[i + 1].y);
+                Point nextP2(smoothedPath[i + 2].x, smoothedPath[i + 2].y);
                 Point predCarP2;
                 Point predCarP1;
                 Point currCarP;

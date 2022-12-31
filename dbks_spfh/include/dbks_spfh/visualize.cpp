@@ -109,7 +109,6 @@ void Visualization::visualize_initial_path(Path &path)
 {
     geometry_msgs::PoseStamped pose_stamped;
     initial_path.header.stamp = ros::Time::now();
-    path.total_path();
     for(auto path_node: path.initial_path)
     {
         pose_stamped.pose.position.x = path_node.x;
