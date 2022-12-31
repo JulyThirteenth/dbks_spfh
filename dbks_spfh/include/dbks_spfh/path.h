@@ -19,7 +19,8 @@ public:
     std::vector<Node> forward_path;
     std::vector<Node> shooting_path;
     std::vector<Node> reverse_path;
-    std::vector<Node> full_path;
+    std::vector<Node> initial_path;
+    std::vector<Node> smooth_path;
 };
 
 #endif

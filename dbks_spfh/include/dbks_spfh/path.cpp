@@ -86,19 +86,19 @@ void Path::trace_path(const NodeP &pred, const NodeP &next, bool shooting /* = t
 }
 void Path::total_path()
 {
-    if (!full_path.empty())
-        full_path.clear();
+    if (!initial_path.empty())
+        initial_path.clear();
     for (auto path_node : forward_path)
     {
-        full_path.push_back(path_node);
+        initial_path.push_back(path_node);
     }
     for (auto path_node : shooting_path)
     {
-        full_path.push_back(path_node);
+        initial_path.push_back(path_node);
     }
     for (auto path_node : reverse_path)
     {
-        full_path.push_back(path_node);
+        initial_path.push_back(path_node);
     }
-    myinfo << "Total Path Size: " << full_path.size();
+    myinfo << "Total Path Size: " << initial_path.size();
 }

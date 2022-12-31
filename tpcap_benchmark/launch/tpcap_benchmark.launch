@@ -1,6 +1,6 @@
 <launch>
 
-    <arg name="case_id" default="18" />
+    <arg name="case_id" default="14" />
     <arg name="case_padding" default="1.0" />
     <arg name="case_resolution" default="0.2" />
     <arg name="case_stage" default="initial" />

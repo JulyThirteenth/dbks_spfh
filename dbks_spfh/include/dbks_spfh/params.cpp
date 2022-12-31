@@ -36,9 +36,9 @@ DEFINE_int32(ShiftIterations, 10, "Shift iterations of the DBSK.");
 DEFINE_double(MaxSwelling, 0.1, "Max swelling size.");
 DEFINE_double(MinSwelling, -0.2, "Min swelling size.");
 DEFINE_double(MaxShootingDistance, 10.0, "Max distance of shooting.");
-DEFINE_bool(Visualization, true, "Flag of alorithm visualization.");
+DEFINE_bool(Visualization, true, "Flag of algorithm visualization.");
 
 DEFINE_int32(MaxSmoothIterations, 5000, "Max iterations of smoothness.");
-DEFINE_double(RatioOfSmoothness, 1.0, "");
-DEFINE_double(RatioOfObstacle, 10.0, "");
-DEFINE_double(SmoothStepSize, 0.01, "");
+DEFINE_double(RatioOfSmoothness, 1.0, "Ratio of smoothness in cost function.");
+DEFINE_double(RatioOfObstacle, 10.0, "Ratio of obstacle in cost function.");
+DEFINE_double(SmoothStepSize, 0.01, "Step of gradient descent optimization.");

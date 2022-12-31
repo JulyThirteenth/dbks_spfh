@@ -56,7 +56,7 @@ void smoothPath(Path &path, GridMap &gridMap, Visualization &visualization)
     // 前一次迭代的总代价、平滑代价、障碍物代价
     double preTotalCost = totalCost, preSmoothnessCost = smoothnessCost, preObstacleCost = obstacleCost;
     // 路径节点总数
-    const int pathLength = path.full_path.size();
+    const int pathLength = path.initial_path.size();
     // 记录需要锚定的点的下标，true表示优化时锚定
     std::vector<bool> anchorIndex(pathLength, false);
     // 记录迭代次数
@@ -65,15 +65,15 @@ void smoothPath(Path &path, GridMap &gridMap, Visualization &visualization)
     int smoothTimes = 0;
     // 优化退出标志
     bool notQuit = true;
-    Path unsmoothedPath = path;
-    Path &smoothedPath = path;
+    // Path unsmoothedPath = path;
+    std::vector<Node> &smoothedPath = path.smooth_path;
     if (smoothnessTermToggle == false && obstacleTermToggle == false)
     {
         notQuit = false;
     }
     while (notQuit)
     {
-        smoothedPath = unsmoothedPath;
+        smoothedPath = path.initial_path;
         smoothTimes++;
         iterations = 0;
         totalCost = 0, smoothnessCost = 0, obstacleCost = 0;
@@ -96,23 +96,23 @@ void smoothPath(Path &path, GridMap &gridMap, Visualization &visualization)
                     continue;
                 }
                 // 确保优化同向轨迹点
-                if (smoothedPath.full_path[i - 2].isReverse() != smoothedPath.full_path[i - 1].isReverse() ||
-                    smoothedPath.full_path[i - 1].isReverse() != smoothedPath.full_path[i].isReverse() ||
-                    smoothedPath.full_path[i].isReverse() != smoothedPath.full_path[i + 1].isReverse() ||
-                    smoothedPath.full_path[i + 1].isReverse() != smoothedPath.full_path[i + 2].isReverse())
+                if (smoothedPath[i - 2].isReverse() != smoothedPath[i - 1].isReverse() ||
+                    smoothedPath[i - 1].isReverse() != smoothedPath[i].isReverse() ||
+                    smoothedPath[i].isReverse() != smoothedPath[i + 1].isReverse() ||
+                    smoothedPath[i + 1].isReverse() != smoothedPath[i + 2].isReverse())
                 {
                     continue;
                 }
-                if (i - 3 < 0 || smoothedPath.full_path[i - 3].isReverse() != smoothedPath.full_path[i].isReverse() ||
-                    i + 3 >= pathLength || smoothedPath.full_path[i + 3].isReverse() != smoothedPath.full_path[i].isReverse())
+                if (i - 3 < 0 || smoothedPath[i - 3].isReverse() != smoothedPath[i].isReverse() ||
+                    i + 3 >= pathLength || smoothedPath[i + 3].isReverse() != smoothedPath[i].isReverse())
                 {
                     continue;
                 }
-                Point predP2(smoothedPath.full_path[i - 2].x, smoothedPath.full_path[i - 2].x);
-                Point predP1(smoothedPath.full_path[i - 1].x, smoothedPath.full_path[i - 1].x);
-                Point currP(smoothedPath.full_path[i].x, smoothedPath.full_path[i].x);
-                Point nextP1(smoothedPath.full_path[i + 1].x, smoothedPath.full_path[i + 1].x);
-                Point nextP2(smoothedPath.full_path[i + 2].x, smoothedPath.full_path[i + 2].x);
+                Point predP2(smoothedPath[i - 2].x, smoothedPath[i - 2].x);
+                Point predP1(smoothedPath[i - 1].x, smoothedPath[i - 1].x);
+                Point currP(smoothedPath[i].x, smoothedPath[i].x);
+                Point nextP1(smoothedPath[i + 1].x, smoothedPath[i + 1].x);
+                Point nextP2(smoothedPath[i + 2].x, smoothedPath[i + 2].x);
                 Point predCarP2;
                 Point predCarP1;
                 Point currCarP;
@@ -142,8 +142,8 @@ void smoothPath(Path &path, GridMap &gridMap, Visualization &visualization)
                 // 更新path
                 currCarP = currCarP + gradP;
                 gridMap.transformFromCarToGrid(currCarP.x, currCarP.y, currP.x, currP.y);
-                smoothedPath.full_path[i].x = currP.x;
-                smoothedPath.full_path[i].y = currP.y;
+                smoothedPath[i].x = currP.x;
+                smoothedPath[i].y = currP.y;
             }
             iterations++;
             // 如果本次值大于上次值，则步长过大，应该减少步长
@@ -153,7 +153,7 @@ void smoothPath(Path &path, GridMap &gridMap, Visualization &visualization)
                 // myinfo << "stepSize: " << stepSize;
             }
             // 提前终止
-            if (fabs(totalCost - preTotalCost) < 1e-4)
+            if (fabs(totalCost - preTotalCost) < 1e-6)
             {
                 break;
             }
@@ -166,52 +166,52 @@ void smoothPath(Path &path, GridMap &gridMap, Visualization &visualization)
                 continue;
             }
             // 三点同向
-            if (smoothedPath.full_path[i - 1].isReverse() == smoothedPath.full_path[i].isReverse() &&
-                smoothedPath.full_path[i + 1].isReverse() == smoothedPath.full_path[i].isReverse())
+            if (smoothedPath[i - 1].isReverse() == smoothedPath[i].isReverse() &&
+                smoothedPath[i + 1].isReverse() == smoothedPath[i].isReverse())
             {
                 // 如果是前向行驶
-                if (false == smoothedPath.full_path[i].isReverse())
+                if (false == smoothedPath[i].isReverse())
                 {
-                    smoothedPath.full_path[i].t = atan2(smoothedPath.full_path[i + 1].y - smoothedPath.full_path[i - 1].y,
-                                                        smoothedPath.full_path[i + 1].x - smoothedPath.full_path[i - 1].x);
+                    smoothedPath[i].t = atan2(smoothedPath[i + 1].y - smoothedPath[i - 1].y,
+                                                        smoothedPath[i + 1].x - smoothedPath[i - 1].x);
                 }
                 // 如果是逆向行驶
                 else
                 {
-                    smoothedPath.full_path[i].t = atan2(smoothedPath.full_path[i - 1].y - smoothedPath.full_path[i + 1].y,
-                                                        smoothedPath.full_path[i - 1].x - smoothedPath.full_path[i + 1].x);
+                    smoothedPath[i].t = atan2(smoothedPath[i - 1].y - smoothedPath[i + 1].y,
+                                                        smoothedPath[i - 1].x - smoothedPath[i + 1].x);
                 }
             }
             else
             {
-                if (smoothedPath.full_path[i].isReverse() == smoothedPath.full_path[i - 1].isReverse())
+                if (smoothedPath[i].isReverse() == smoothedPath[i - 1].isReverse())
                 {
                     // 前向行驶
-                    if (false == smoothedPath.full_path[i].isReverse())
+                    if (false == smoothedPath[i].isReverse())
                     {
-                        smoothedPath.full_path[i].t = atan2(smoothedPath.full_path[i].y - smoothedPath.full_path[i - 1].y,
-                                                            smoothedPath.full_path[i].x - smoothedPath.full_path[i - 1].x);
+                        smoothedPath[i].t = atan2(smoothedPath[i].y - smoothedPath[i - 1].y,
+                                                            smoothedPath[i].x - smoothedPath[i - 1].x);
                     }
                     // 逆向行驶
                     else
                     {
-                        smoothedPath.full_path[i].t = atan2(smoothedPath.full_path[i - 1].y - smoothedPath.full_path[i].y,
-                                                            smoothedPath.full_path[i - 1].x - smoothedPath.full_path[i].x);
+                        smoothedPath[i].t = atan2(smoothedPath[i - 1].y - smoothedPath[i].y,
+                                                            smoothedPath[i - 1].x - smoothedPath[i].x);
                     }
                 }
-                else if (smoothedPath.full_path[i].isReverse() == smoothedPath.full_path[i + 1].isReverse())
+                else if (smoothedPath[i].isReverse() == smoothedPath[i + 1].isReverse())
                 {
                     // 前向行驶
-                    if (false == smoothedPath.full_path[i].isReverse())
+                    if (false == smoothedPath[i].isReverse())
                     {
-                        smoothedPath.full_path[i].t = atan2(smoothedPath.full_path[i + 1].y - smoothedPath.full_path[i].y,
-                                                            smoothedPath.full_path[i + 1].x - smoothedPath.full_path[i].x);
+                        smoothedPath[i].t = atan2(smoothedPath[i + 1].y - smoothedPath[i].y,
+                                                            smoothedPath[i + 1].x - smoothedPath[i].x);
                     }
                     // 逆向行驶
                     else
                     {
-                        smoothedPath.full_path[i].t = atan2(smoothedPath.full_path[i].y - smoothedPath.full_path[i + 1].y,
-                                                            smoothedPath.full_path[i].x - smoothedPath.full_path[i + 1].x);
+                        smoothedPath[i].t = atan2(smoothedPath[i].y - smoothedPath[i + 1].y,
+                                                            smoothedPath[i].x - smoothedPath[i + 1].x);
                     }
                 }
             }
@@ -225,9 +225,9 @@ void smoothPath(Path &path, GridMap &gridMap, Visualization &visualization)
         {
             //! 原始路径点均为后轴
             // 如果优化后该点有障碍物（锚点也有可能有障碍物，因为角度改变）
-            currX = smoothedPath.full_path[i].x;
-            currY = smoothedPath.full_path[i].y;
-            currT = smoothedPath.full_path[i].t;
+            currX = smoothedPath[i].x;
+            currY = smoothedPath[i].y;
+            currT = smoothedPath[i].t;
             if (false == anchorIndex[i] &&
                 false == gridMap.isPassable(currX, currY, currT, swelling))
             {
@@ -241,7 +241,7 @@ void smoothPath(Path &path, GridMap &gridMap, Visualization &visualization)
     }
     if(FLAGS_Visualization)
     {
-        visualization.visualize_smooth_path(smoothedPath);
+        visualization.visualize_smooth_path(path);
     }
     myinfo << "一共优化了" << smoothTimes << "次";
     myinfo << "最后优化第" << iterations << "次迭代终止";
