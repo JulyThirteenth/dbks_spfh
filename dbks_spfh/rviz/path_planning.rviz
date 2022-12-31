@@ -156,7 +156,7 @@ Visualization Manager:
     - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
-      Color: 25; 255; 0
+      Color: 239; 41; 41
       Enabled: true
       Head Diameter: 0.15000000596046448
       Head Length: 0.10000000149011612
@@ -192,7 +192,7 @@ Visualization Manager:
         Y: 0
         Z: 0
       Pose Color: 255; 85; 255
-      Pose Style: None
+      Pose Style: Axes
       Radius: 0.029999999329447746
       Shaft Diameter: 0.10000000149011612
       Shaft Length: 0.10000000149011612
@@ -227,15 +227,15 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 26.23442268371582
+      Distance: 18.89471435546875
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 14.240068435668945
-        Y: 1.2524824142456055
+        X: 8.476295471191406
+        Y: 10.980724334716797
         Z: -1.2297308785491623e-5
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
@@ -264,4 +264,4 @@ Window Geometry:
     collapsed: true
   Width: 1267
   X: 268
-  Y: 60
+  Y: 30

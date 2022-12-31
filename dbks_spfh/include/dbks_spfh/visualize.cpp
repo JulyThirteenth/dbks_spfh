@@ -123,7 +123,7 @@ void Visualization::visualize_smooth_path(Path &path)
 {
     geometry_msgs::PoseStamped pose_stamped;
     smooth_path.header.stamp = ros::Time::now();
-    path.total_path();
+    // path.total_path();
     for(auto path_node: path.full_path)
     {
         pose_stamped.pose.position.x = path_node.x;

@@ -89,7 +89,6 @@ void PathPlanning::run()
 int main(int argc, char **argv)
 {
     FLAGS_alsologtostderr = true;
-    FLAGS_log_dir = "/home/shaw/Desktop/dev/catkin_ws/src/dbks_spfh/log";
     google::InitGoogleLogging(argv[0]);
     ros::init(argc, argv, "path_planning_node");
     PathPlanning pp;
